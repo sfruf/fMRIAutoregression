@@ -11,7 +11,7 @@ def load_features(data_dir:str):
     
     import numpy as np
 
-    if data_dir[-1] is not '/': #check path format
+    if data_dir[-1] != '/': #check path format
         data_dir.append('/')
 
     class_labels=np.load(f'{data_dir}processed/Class_Labels.npy')
