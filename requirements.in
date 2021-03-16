@@ -7,3 +7,5 @@ seaborn
 sklearn
 xgboost
 ipykernel
+skl2onnx
+onnxruntime
