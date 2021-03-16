@@ -2,15 +2,14 @@
 
 Setting up Docker
 Using Pip-compile
+Using ONNX
 
-
-# Process improvements
+## Process improvements
 
 Need to have a uniform dev project workflow
 
+## Useful Commands
 
-
-# Useful Commands
 To deal with finding your own packages in a notebook:
 
 ~~~python
@@ -21,3 +20,4 @@ sys.path.append('..')
 To install your own package
 pip install -e .
 
+python3.8 -m piptools compile --allow-unsafe
