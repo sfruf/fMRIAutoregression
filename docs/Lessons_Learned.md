@@ -3,6 +3,7 @@
 Setting up Docker
 Using Pip-compile
 Using ONNX
+Chance to explore how others would use this code, and helped me learn how to do it right the first time.
 
 ## Process improvements
 
