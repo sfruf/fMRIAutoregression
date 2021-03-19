@@ -1,6 +1,6 @@
 # Next Action
 
-Break up code block train_model
+Set flow for pipe_test (train_model, line 111)
 ## Backlog 
 ### Finish Exploratory DA notebooks
 
@@ -10,10 +10,10 @@ Add PCA, PLS to feature notebooks
 
 ### Make Models Package
 
-Move classifier into train model
-Refactor train_model so some of it's functionality is in predict_model
-Set up predict model.py to export tables as well
-Save models and clean up table export
+Train all classifiers from make_classifier.ipynb
+Make pipe_test
+Set up basic predict model
+Basic table export
 
 ### Clean Up Notebook
 

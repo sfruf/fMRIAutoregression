@@ -76,9 +76,6 @@ def make_params(pipe_name):
 def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag): 
     '''
     Train the classifiers described by pipelines, using subsets of features described by subsets. 
-
-    Work in Progress: 
-    Pickle save
     '''
 
     from sklearn.model_selection import GridSearchCV
@@ -112,10 +109,14 @@ def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
 
 
 #def pipe_test():
+'''
+Function to produce validation outputs for the various pipelines
+Work In Progress:
+Set function structure
+Import Jackknife
+'''
 #    score.append(search.score(X_test_sc, y_test))
 #    variance.append(jackknife_variance(X_test_sc,y_test,search))
 #    print(f'For all features')
-#    print(f'Best score on training data is {search.best_score_}')
-#    print(f'Using a classifier with the following parameters {search.best_estimator_} \n')
 #    print(f'On the test set the classifier has an accuracy of {All_feat_test[-1]} with variance {All_feat_test_jack[-1]} and the following report \n')
 #    print(classification_report(y_test,search.predict(X_test_sc)))
