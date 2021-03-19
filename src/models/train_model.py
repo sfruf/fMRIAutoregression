@@ -77,6 +77,8 @@ def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
     '''
     Train the classifiers described by pipelines, using subsets of features described by subsets. 
 
+    Work in Progress: 
+    Pickle save
     '''
 
     from sklearn.model_selection import GridSearchCV
@@ -98,13 +100,12 @@ def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
             fit_models.append(search)
             score.append(search.best_score_)
             estimator.append(search.best_estimator_)
-            save_name=f'{workspace}/models/{key}/{pipeline_name}.onnx'
-
+            save_name=f'{workspace}models/{key}_{pipeline_name}.sav'
         if save_flag:
-            from skl2onnx import to_onnx
-            onx=to_onnx(search,x_sub[:,1].astype(np.float32))
+            from pickle import dump
+
             with open(save_name,"wb") as f:
-                f.write(onx.SerializeToString())
+                dump(search,f)
     return fit_models,score,estimator
 
 
