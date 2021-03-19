@@ -72,52 +72,49 @@ def make_params(pipe_name):
 
     return param_grid
 
-def multi_subset_pipeline(X,y,CV,subsets:dict,pipelines:list,save_flag): 
+
+def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag): 
     '''
     Train the classifiers described by pipelines, using subsets of features described by subsets. 
 
-    Work in Progress:
-    I've copied all my code from autoregression over. I need to split it into things that are for evaluation 
-    and things that should go into predicitons 
     '''
-    scoring = {'Acc': 'accuracy', 'Bal_Acc': 'balanced_accuracy'} 
 
+    from sklearn.model_selection import GridSearchCV
+    import numpy as np
+    import os
+    workspace=os.environ['workspaceFolder']
+
+    scoring = {'Acc': 'accuracy', 'Bal_Acc': 'balanced_accuracy'} 
+    score=list()
+    estimator=list()
+    fit_models=list()
     for key,val in subsets.items():
-        X_sub=X[:,val]
+        x_sub=x[:,val] # need to see if this will work based on numpy
         for pipeline_name in pipelines:
             pipeline=make_pipe(pipeline_name)
             params=make_params(pipeline_name)
-            search=GridSearchCV(estimator=pipe,param_grid=param,scoring=scoring,refit='Bal_Acc',cv=CV)
-            search.fit(X_train_sc, y_train)
-            All_feat_test.append(search.score(X_test_sc, y_test))
-            All_feat_test_jack.append(jackknife_variance(X_test_sc,y_test,search))
-            save_name=f'{workspaceFolder}/models/{key}/{pipeline_name}'
+            search=GridSearchCV(estimator=pipeline,param_grid=params,scoring=scoring,refit='Bal_Acc',cv=cv)
+            search.fit(x_sub, y)
+            fit_models.append(search)
+            score.append(search.best_score_)
+            estimator.append(search.best_estimator_)
+            save_name=f'{workspace}/models/{key}/{pipeline_name}.onnx'
 
-        print(f'For all features')
-        print(f'Best score on training data is {search.best_score_}')
-        print(f'Using a classifier with the following parameters {search.best_estimator_} \n')
-        print(f'On the test set the classifier has an accuracy of {All_feat_test[-1]} with variance {All_feat_test_jack[-1]} and the following report \n')
-        print(classification_report(y_test,search.predict(X_test_sc)))
         if save_flag:
             from skl2onnx import to_onnx
-            onx=to_onnx(mdl,X_train[:,1].astype(numpy.float32))
-            with open("mdl_trained.onnx","wb") as f:
+            onx=to_onnx(search,x_sub[:,1].astype(np.float32))
+            with open(save_name,"wb") as f:
                 f.write(onx.SerializeToString())
-    # program flow -> enter X, y, dict of {"subset_name":indices} to split the subset of features used to predict the model
-    # [pipes] a list of pipeline names, CV object
-
-#save models in format pipe_subset_folds.onnx
-# return accuracy={"pipes_subset":train accuracy}
-    return pipelines
-
-#def multi_pipe(X,y,CV,pipes):
-#
-#    return trained_pipe
+    return fit_models,score,estimator
 
 
-#
 
-#onx=to_onnx(mdl,X_train[:,1].astype(numpy.float32))
 
-#with open("mdl_trained.onnx","wb") as f:
-#    f.write(onx.SerializeToString())
+#def pipe_test():
+#    score.append(search.score(X_test_sc, y_test))
+#    variance.append(jackknife_variance(X_test_sc,y_test,search))
+#    print(f'For all features')
+#    print(f'Best score on training data is {search.best_score_}')
+#    print(f'Using a classifier with the following parameters {search.best_estimator_} \n')
+#    print(f'On the test set the classifier has an accuracy of {All_feat_test[-1]} with variance {All_feat_test_jack[-1]} and the following report \n')
+#    print(classification_report(y_test,search.predict(X_test_sc)))
