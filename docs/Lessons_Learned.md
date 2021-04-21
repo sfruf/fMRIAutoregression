@@ -11,6 +11,7 @@ Need to have a uniform dev project workflow
 Use ONNX (I wanted to use it and then got weird errors that told me I needed to learn a lot more) 
 Data Version Control
 Testing framework
+
 ## Useful Commands
 
 To deal with finding your own packages in a notebook:
