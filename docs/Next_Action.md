@@ -1,6 +1,7 @@
 # Next Action
+Change train_multi_subset_pipeline (train_model, line 79) to create a list of lists to better match subset
+Return list of lists of performance from score_on_test_subset (train_model, line 130)
 
-Set flow for pipe_test (train_model, line 111)
 ## Backlog 
 ### Finish Exploratory DA notebooks
 
@@ -12,7 +13,7 @@ Add PCA, PLS to feature notebooks
 
 Train all classifiers from make_classifier.ipynb
 Make pipe_test
-Set up basic predict model
+Set up basic predict model -> unpickle then predict
 Basic table export
 
 ### Clean Up Notebook

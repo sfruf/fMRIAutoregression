@@ -1,3 +1,6 @@
+from src.models import jackknife_variance
+
+
 def make_pipe(pipe_name:str):
     '''
     Makes a pipeline object based on the name. Looks for component_component.  
@@ -73,7 +76,7 @@ def make_params(pipe_name):
     return param_grid
 
 
-def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag): 
+def train_multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag): 
     '''
     Train the classifiers described by pipelines, using subsets of features described by subsets. 
     '''
@@ -88,7 +91,7 @@ def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
     estimator=list()
     fit_models=list()
     for key,val in subsets.items():
-        x_sub=x[:,val] # need to see if this will work based on numpy
+        x_sub=x[:,val] 
         for pipeline_name in pipelines:
             pipeline=make_pipe(pipeline_name)
             params=make_params(pipeline_name)
@@ -108,13 +111,37 @@ def multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
 
 
 
-#def pipe_test():
-'''
-Function to produce validation outputs for the various pipelines
-Work In Progress:
-Set function structure
-Import Jackknife
-'''
+def score_on_test(x,y,model):
+    ''' 
+    Calculates model performance on test set using built in score method and jackknife resampling. 
+    '''
+    if isinstance(model,list):
+        score=list()
+        variance=list()
+        for mod in model:
+            score.append(mod.score(x,y))
+            variance.append(jackknife_variance(x,y,mod))
+    else:
+        score=model.score(x,y)
+        variance=jackknife_variance(x,y,model)
+
+    return score,variance
+
+def score_on_test_subset(x,y,subsets:dict,models):
+    '''
+    Calculates model performance on test set across multiple subsets of data
+    '''
+    
+    if len(subsets)!= len(models):
+        print("Model number doesn't match the number of data subsets")
+
+    for ind,(key,val) in enumerate(subsets.items()):
+        x_sub=x[:,val]
+        for mod in models[ind]:
+            score,variance=score_on_test(x_sub,y,mod)
+
+    # Next steps: 
+        
 #    score.append(search.score(X_test_sc, y_test))
 #    variance.append(jackknife_variance(X_test_sc,y_test,search))
 #    print(f'For all features')
