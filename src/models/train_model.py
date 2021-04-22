@@ -119,21 +119,17 @@ def score_on_test(x,y,model,subset):
     ''' 
     Calculates model performance on test set using built in score method and jackknife resampling. 
     '''
+    import pandas as pd
+
     if isinstance(model,dict):
-        score=dict()
-        variance=dict()
+        performance=pd.DataFrame(columns=['Pipeline','Score','Variance'])
+
         for key,val in model.items():
             subset_key=key.split('_')[0]
             x_score=x[:,subset[subset_key]]
-            score[key]=val.score(x_score,y)
-            variance[key]=jackknife_variance(x_score,y,val)
+            performance_dictionary={'Pipeline':key,'Score':val.score(x_score,y),'Variance':jackknife_variance(x_score,y,val)}
+            performance=performance.append(performance_dictionary,ignore_index=True)
     else:
-        score=model.score(x,y)
-        variance=jackknife_variance(x,y,model)
+        performance={'Score':model.score(x,y),'Variance':jackknife_variance(x,y,model)}
+    return performance 
 
-    return score,variance        
-#    score.append(search.score(X_test_sc, y_test))
-#    variance.append(jackknife_variance(X_test_sc,y_test,search))
-#    print(f'For all features')
-#    print(f'On the test set the classifier has an accuracy of {All_feat_test[-1]} with variance {All_feat_test_jack[-1]} and the following report \n')
-#    print(classification_report(y_test,search.predict(X_test_sc)))

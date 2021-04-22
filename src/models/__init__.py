@@ -9,3 +9,4 @@ def jackknife_variance(X,y,model):
         Labels=np.delete(y,ind,axis=0)
         S.append(model.score(Samples,Labels))
     return (n-1)*np.var(S)
+
