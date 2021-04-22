@@ -115,37 +115,23 @@ def train_multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
 
 
 
-def score_on_test(x,y,model):
+def score_on_test(x,y,model,subset):
     ''' 
     Calculates model performance on test set using built in score method and jackknife resampling. 
     '''
-    if isinstance(model,list):
-        score=list()
-        variance=list()
-        for mod in model:
-            score.append(mod.score(x,y))
-            variance.append(jackknife_variance(x,y,mod))
+    if isinstance(model,dict):
+        score=dict()
+        variance=dict()
+        for key,val in model.items():
+            subset_key=key.split('_')[0]
+            x_score=x[:,subset[subset_key]]
+            score[key]=val.score(x_score,y)
+            variance[key]=jackknife_variance(x_score,y,val)
     else:
         score=model.score(x,y)
         variance=jackknife_variance(x,y,model)
 
-    return score,variance
-
-def score_on_test_subset(x,y,subsets:dict,models):
-    '''
-    Calculates model performance on test set across multiple subsets of data
-    '''
-    
-    if len(subsets)!= len(models):
-        print("Model number doesn't match the number of data subsets")
-
-    for ind,(key,val) in enumerate(subsets.items()):
-        x_sub=x[:,val]
-        for mod in models[ind]:
-            score,variance=score_on_test(x_sub,y,mod)
-
-    # Next steps: 
-        
+    return score,variance        
 #    score.append(search.score(X_test_sc, y_test))
 #    variance.append(jackknife_variance(X_test_sc,y_test,search))
 #    print(f'For all features')
