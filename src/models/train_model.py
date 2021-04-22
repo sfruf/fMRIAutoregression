@@ -78,7 +78,7 @@ def make_params(pipe_name):
 
 def train_multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag): 
     '''
-    Train the classifiers described by pipelines, using subsets of features described by subsets. 
+    Train the classifiers described by pipelines, using subsets of features described by subsets
     '''
 
     from sklearn.model_selection import GridSearchCV
@@ -87,9 +87,9 @@ def train_multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
     workspace=os.environ['workspaceFolder']
 
     scoring = {'Acc': 'accuracy', 'Bal_Acc': 'balanced_accuracy'} 
-    score=list()
-    estimator=list()
-    fit_models=list()
+    score=dict()
+    estimator=dict()
+    fit_models=dict()
     for key,val in subsets.items():
         x_sub=x[:,val] 
         for pipeline_name in pipelines:
@@ -97,15 +97,19 @@ def train_multi_subset_pipeline(x,y,cv,subsets:dict,pipelines:list,save_flag):
             params=make_params(pipeline_name)
             search=GridSearchCV(estimator=pipeline,param_grid=params,scoring=scoring,refit='Bal_Acc',cv=cv)
             search.fit(x_sub, y)
-            fit_models.append(search)
-            score.append(search.best_score_)
-            estimator.append(search.best_estimator_)
-            save_name=f'{workspace}models/{key}_{pipeline_name}.sav'
-        if save_flag:
-            from pickle import dump
 
-            with open(save_name,"wb") as f:
-                dump(search,f)
+            save_name=f"{key}_{pipeline_name}"
+            fit_models[save_name]=search
+            score[save_name]=search.best_score_
+            estimator[save_name]=search.best_estimator_
+            save_file=f'{workspace}models/{save_name}.sav'
+
+            if save_flag:
+                from pickle import dump
+
+                with open(save_file,"wb") as f:
+                    dump(search,f)
+            
     return fit_models,score,estimator
 
 
