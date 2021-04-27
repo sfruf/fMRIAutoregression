@@ -55,7 +55,7 @@ def make_params(pipe_name):
 
     params_xgb = {'XGB__objective': ['binary:logistic'],'XGB__max_depth':depths }
 
-    params_pca = {'pca__n_components':num_components}
+    params_pca = {'PCA__n_components':num_components}
 
     params_mi = {'MI__k':num_components}
 
