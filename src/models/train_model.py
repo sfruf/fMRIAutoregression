@@ -46,10 +46,10 @@ def make_params(pipe_name):
     pipe_parts=pipe_name.split('_')
     param_grid={}
 
-    num_components=[4,6,8,10,12]
+    num_components=[4,6,8]
     svc_kernels=['linear','rbf']
-    svc_reg=[.1,1,10,100, 1000] 
-    depths=[*range(1,8)]
+    svc_reg=[.1,1,10,100] 
+    depths=[*range(1,8,2)]
 
     params_svc = {'SVC__kernel': svc_kernels,'SVC__C': svc_reg}
 
