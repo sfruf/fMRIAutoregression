@@ -1,24 +1,11 @@
 # Next Action
 
-Set up basic predict model -> unpickle then predict
+None. Finished for now.
 
-Move PCA function
-Add PCA function to notebooks
+## Things that could be done to make this project better
 
-Tidy up
+Run comparisons of performance on sgacc features and dmn features in the same model pipelines used
 
-## Backlog
+Include more hyperparameters to the XgBoost parameter space search
 
-### Finish Exploratory DA notebooks
-
-Make PCA plot function
-Make PLS plot function (not going to do)
-Add PCA to feature notebooks
-
-### Make Models Package
-
-Set up basic predict model -> unpickle then predict
-
-### Clean Up Notebook
-
-Fix Documentation
+Check for the various models if there are any patterns in the features which seem to perform best
