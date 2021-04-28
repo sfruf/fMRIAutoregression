@@ -27,10 +27,10 @@ def load_features(data_dir:str):
     return class_labels,two_class_labels,pos_str,neg_str,clus_co,ar_array,num_regions,num_subjs
 
 
-def binary_pca_plot(x_plot,y_plot,label_string,pca_kernel,pca_gamma,save_flag=False):
+def binary_pca_plot(x_plot,y_plot,label_string,pca_kernel,pca_gamma,classes,save_flag=False):
     ''' Transforms x_plot to two dimensions with kernel PCA and makes a scatter plot titled with label_string, colored by binary labels in y_plot. '''
     from sklearn.decomposition import KernelPCA
-    import matplotlib as plt
+    import matplotlib.pyplot as plt
     
     if x_plot.shape[0]>y_plot.shape[0]: 
         x_pca=KernelPCA(n_components=2,kernel=pca_kernel.lower(),gamma=pca_gamma).fit_transform(x_plot.transpose())
@@ -40,7 +40,7 @@ def binary_pca_plot(x_plot,y_plot,label_string,pca_kernel,pca_gamma,save_flag=Fa
     plt.plot(x_pca[y_plot==1,0],x_pca[y_plot==1,1],'b+')
     plt.plot(x_pca[y_plot==0,0],x_pca[y_plot==0,1],'g+')
 
-    plt.legend(labels=['Seizure','No Seizure'])
+    plt.legend(labels=[classes['1'],classes['0']])
     plt.xlabel('PCA Component 1')
     plt.ylabel('PCA Component 2')
     plt.title(f'PCA plot of {label_string} with {pca_kernel} kernel')
